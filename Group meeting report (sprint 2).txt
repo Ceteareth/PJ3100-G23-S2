@@ -1,0 +1,7 @@
+Goal for sprint week 2:
+- Create a simple prototype in unity 3
+- Get more insight in Unity 3 engine
+- Learn more about how Git works, and get good understanding of this process
+- Use Jira actively for every tasks (sprint issues)
+- Focus on what the customer wants when creating the prototype
+- Have more structure when creating any type of scrum artifacts (product, documentation etc.)

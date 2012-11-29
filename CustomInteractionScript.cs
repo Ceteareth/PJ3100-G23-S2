@@ -13,6 +13,10 @@ public class CustomInteractionScript : MonoBehaviour {
 	private bool itemPresent = true;
 	string message;
 	
+	void Start(){
+		Screen.showCursor = false;	
+	}
+	
 	void OpenDoor(){
 		
 		if (!openDoor || repeatTrigger){
@@ -47,17 +51,19 @@ public class CustomInteractionScript : MonoBehaviour {
 		GameObject targetGameObject = currentTarget as GameObject;
 		if (targetBehaviour != null)
 			targetGameObject = targetBehaviour.gameObject;
-		
-		Destroy(targetGameObject);
+		targetGameObject.SetActive(false);
 		pickedPaintings++;
 		itemPresent = false;
+		
 		message = "Got a painting!";
+		displayMessage = true;
 		StartCoroutine(wait());
+		
 	}
 	
 	void OnGUI(){
 		if(displayMessage) {
-		 	GUI.Label (new Rect(Screen.width / 2, Screen.height / 4f, 100, 100), message);
+		 	GUI.Label (new Rect(Screen.width / 2, Screen.height / 4f, 200, 200), message);
 		}
 		if(triggered && itemPresent){
 			GUI.Label (new Rect(Screen.width / 2, Screen.height / 4f, 200, 200), "Press E to interact");	

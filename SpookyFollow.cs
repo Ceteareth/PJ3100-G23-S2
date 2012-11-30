@@ -4,25 +4,27 @@ using System.Collections;
 public class SpookyFollow : MonoBehaviour {
 	private Transform player;
 	private Vector3 viewPlace;
-	private Vector3 nextPos;
 	private float distance;
+	public float followSpeed = 0.01F;
+	public float levitationHeight = 1.0F;
+	public float personalSpace = 1.7F;//Hvor langt unna playeren han stopper. 1,7 meter.
 	// Use this for initialization
 	void Start () {
 		player = GameObject.FindWithTag("Player").transform;
-	
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		distance = Vector3.Distance(transform.position, player.position);
 		viewPlace = player.position+player.forward;
-		if(distance>1.7)
+		if(distance > personalSpace)
 		{
-			if(Vector3.Distance(transform.position,viewPlace)>Vector3.Distance(transform.position,player.position))
+			if(Vector3.Distance(transform.position,viewPlace) > Vector3.Distance(transform.position,player.position))
 			{
-				transform.position = Vector3.Lerp(transform.position, player.position, 0.015F);
-				nextPos = new Vector3(transform.position.x, Terrain.activeTerrain.SampleHeight(transform.position)+1.7F, transform.position.z);
-				transform.position = Vector3.Lerp(transform.position, nextPos, 1F);
+				transform.position = Vector3.Lerp(transform.position, player.position, followSpeed);
+				Vector3 temp = transform.position;
+				temp.y = Terrain.activeTerrain.SampleHeight(transform.position)+levitationHeight;
+				transform.position = temp;
 				transform.LookAt(new Vector3(player.position.x,1000,player.position.z));
 			}
 		}

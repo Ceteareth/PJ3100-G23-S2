@@ -8,13 +8,16 @@ public class CustomInteractionScript : MonoBehaviour {
 	public bool repeatTrigger = false;
 	public bool triggered = false;
 	public bool isDoor = true;
-	private int pickedPaintings = 0;
 	private bool displayMessage = false;
 	private bool itemPresent = true;
 	string message;
-	
+	private Transform player;
+	private Vector3 nextPos;
+	private float distance;
+
 	void Start(){
-		Screen.showCursor = false;	
+		Screen.showCursor = false;
+		player = GameObject.FindWithTag("Player").transform;
 	}
 	
 	void OpenDoor(){
@@ -45,20 +48,31 @@ public class CustomInteractionScript : MonoBehaviour {
 		}
 	}
 	
-	void PickUpPainting(){
+	void PickUpItem(){
 		Object currentTarget = target != null ? target : gameObject;
 		Behaviour targetBehaviour = currentTarget as Behaviour;
 		GameObject targetGameObject = currentTarget as GameObject;
 		if (targetBehaviour != null)
 			targetGameObject = targetBehaviour.gameObject;
 		targetGameObject.SetActive(false);
-		pickedPaintings++;
 		itemPresent = false;
+		string itemType = targetGameObject.tag;
 		
-		message = "Got a painting!";
+		message = "Got a " + itemType + "!";
 		displayMessage = true;
 		StartCoroutine(wait());
 		
+	}
+	
+	void DragItem(){
+		Object currentTarget = target != null ? target : gameObject;
+		Behaviour targetBehaviour = currentTarget as Behaviour;
+		GameObject targetGameObject = currentTarget as GameObject;
+		if (targetBehaviour != null)
+			targetGameObject = targetBehaviour.gameObject;
+		
+		targetGameObject.gameObject.transform.rotation = Quaternion.Slerp(targetGameObject.gameObject.transform.rotation, Quaternion.LookRotation(player.position - targetGameObject.gameObject.transform.position), 1.0f*Time.deltaTime);
+		targetGameObject.gameObject.transform.position += targetGameObject.gameObject.transform.forward * 1.0f * Time.deltaTime;
 	}
 	
 	void OnGUI(){
@@ -85,7 +99,7 @@ public class CustomInteractionScript : MonoBehaviour {
 			else if(openDoor && isDoor)
 				CloseDoor();
 			else {
-				PickUpPainting();
+				DragItem();
 			}
 		}
 	}

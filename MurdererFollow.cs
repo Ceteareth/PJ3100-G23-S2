@@ -5,7 +5,8 @@ public class MurdererFollow : MonoBehaviour{
 	/*Rigidbodyen til morderen bør ha mass 0,01. Da flyr han ikke opp fra bakken, og klarer ikke flytte ting med mass 1.
 	 *Mass 1 er standard, så da kan han by default ikke flytte på ting.
 	 *Hvis noe har lik masse som morderen så greier han å dytte/velte det.
-	 *Hvis indirect movement skal benyttes burde rigidbodyen også ha 5 i drag.*/
+	 *Hvis indirect movement skal benyttes burde rigidbodyen også ha 5 i drag.
+	 *Morderen må ha låst alle rotasjoen i rigidbodyen sin!!!*/
 	private Transform player;
 	private Transform flashlight;
 	public bool directMovement = true;
@@ -14,6 +15,7 @@ public class MurdererFollow : MonoBehaviour{
 	public bool beingLit = false;//Sier om morderen blir belyst av flashlight.
 	public float moveSpeed = 2;
 	public float personalSpace = 1.5f;
+	public float extraGravity = -1F;
 	Vector3 pointToPlayer;//Vektor som peker fra morderen til playeren.
 
 	void Start ()
@@ -39,7 +41,7 @@ public class MurdererFollow : MonoBehaviour{
 		{
 			rigidbody.velocity = new Vector3(0,0,0);//Hvis directMovement er av hindrer dette morderen fra å være helt gal.
 		}
-		rigidbody.AddForce(0,-2F,0);//Gravity var ikke nok for å holde ham nede. Dette holder, hvis massen hans er 0.01.
+		rigidbody.AddForce(0,extraGravity,0);//Gravity var ikke nok for å holde ham nede. Dette holder, hvis massen hans er 0.01.
 		transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));//Y holder seg oppover.
 	}
 	

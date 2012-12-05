@@ -74,14 +74,12 @@ public class CustomInteractionScript : MonoBehaviour {
 			CharacterInventory.hasKey = true;
 		}
 		
-		
 		itemPresent = false;
 		
 		message = "Got a " + itemType + "!";
-		displayMessage = true;
 		
 		StartCoroutine(wait());
-		targetGameObject.SetActive(false);
+		targetGameObject.transform.localScale = new Vector3(0, 0, 0);
 	}
 	
 	void DragItem(){

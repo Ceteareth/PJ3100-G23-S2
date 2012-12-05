@@ -5,7 +5,6 @@ public class CustomInteractionScript : MonoBehaviour {
 	
 	public Object target;
 	private bool openDoor = false;
-	public bool repeatTrigger = false;
 	public bool triggered = false;
 	public bool isDoor = true;
 	private bool displayMessage = false;
@@ -14,6 +13,8 @@ public class CustomInteractionScript : MonoBehaviour {
 	private Transform player;
 	private Vector3 nextPos;
 	private float distance;
+	public bool hasKey;
+	private bool busyMessage = false;
 
 	void Start(){
 		Screen.showCursor = false;
@@ -21,22 +22,35 @@ public class CustomInteractionScript : MonoBehaviour {
 	}
 	
 	void OpenDoor(){
-		
-		if (!openDoor || repeatTrigger){
+		if (!openDoor){
 			Object currentTarget = target != null ? target : gameObject;
 			Behaviour targetBehaviour = currentTarget as Behaviour;
-			GameObject targetGameObject = currentTarget as GameObject;
+			GameObject targetGameObject = currentTarget as GameObject;	
+			
 			if (targetBehaviour != null)
 				targetGameObject = targetBehaviour.gameObject;
 			
-			targetGameObject.gameObject.transform.Rotate(new Vector3(0, 0, 100));
-			openDoor = true;
+			if(targetGameObject.tag.ToLower() == "maindoor" && CharacterInventory.hasKey){
+				targetGameObject.gameObject.transform.Rotate(new Vector3(0, 0, 100));
+				openDoor = true;
+			}
+			
+			else if(targetGameObject.tag.ToLower() == "maindoor" && !CharacterInventory.hasKey){
+				message = "Need a key";
+				displayMessage = true;
+				StartCoroutine(wait());
+			}
+			
+			else if(targetGameObject.tag.ToLower() != "maindoor") {
+				targetGameObject.gameObject.transform.Rotate(new Vector3(0, 0, 100));
+				openDoor = true;
+			}
 		}
 	}
 	
 	void CloseDoor(){
 		
-		if(openDoor || repeatTrigger){
+		if(openDoor){
 			Object currentTarget = target != null ? target : gameObject;
 			Behaviour targetBehaviour = currentTarget as Behaviour;
 			GameObject targetGameObject = currentTarget as GameObject;
@@ -54,14 +68,20 @@ public class CustomInteractionScript : MonoBehaviour {
 		GameObject targetGameObject = currentTarget as GameObject;
 		if (targetBehaviour != null)
 			targetGameObject = targetBehaviour.gameObject;
-		targetGameObject.SetActive(false);
-		itemPresent = false;
 		string itemType = targetGameObject.tag;
+		
+		if(itemType.ToLower().Equals("key")){
+			CharacterInventory.hasKey = true;
+		}
+		
+		
+		itemPresent = false;
 		
 		message = "Got a " + itemType + "!";
 		displayMessage = true;
-		StartCoroutine(wait());
 		
+		StartCoroutine(wait());
+		targetGameObject.SetActive(false);
 	}
 	
 	void DragItem(){
@@ -79,7 +99,7 @@ public class CustomInteractionScript : MonoBehaviour {
 		if(displayMessage) {
 		 	GUI.Label (new Rect(Screen.width / 2, Screen.height / 4f, 200, 200), message);
 		}
-		if(triggered && itemPresent){
+		if(triggered && itemPresent && !busyMessage){
 			GUI.Label (new Rect(Screen.width / 2, Screen.height / 4f, 200, 200), "Press E to interact");	
 		}
 	}
@@ -99,14 +119,16 @@ public class CustomInteractionScript : MonoBehaviour {
 			else if(openDoor && isDoor)
 				CloseDoor();
 			else {
-				DragItem();
+				PickUpItem();
 			}
 		}
 	}
 	
 	IEnumerator wait(){
+		busyMessage = true;
 		displayMessage = true;
 		yield return new WaitForSeconds(3);
 		displayMessage = false;
+		busyMessage = false;
 	}
 }

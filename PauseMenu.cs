@@ -39,7 +39,7 @@ public class PauseMenu : MonoBehaviour
             if (GUI.Button(new Rect (Screen.width/2, 220, 100, 56), "Restart"))
             {
                 
-               // Application.LoadLevel("SomeLevelHere");
+               //Application.LoadLevel("test_project");
                 
                 Time.timeScale = 1.0f;
                 isPaused = false;

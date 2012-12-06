@@ -46,7 +46,6 @@ public class PauseMenu : MonoBehaviour
             }
             if (GUI.Button(new Rect (Screen.width/2, 320, 100, 56), "Continue"))
             {
-                GetComponent<FPC>().enabled = false;
                 GetComponent<MouseLook>().enabled = true;
                 Screen.showCursor = false;
                 Time.timeScale = 1.0f;

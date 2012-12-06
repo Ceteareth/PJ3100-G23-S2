@@ -6,21 +6,19 @@ public class PauseMenu : MonoBehaviour
 
     bool isPaused = false;
 
-
     void Update()
     {
 
         if (Input.GetKeyDown("escape") && !isPaused)
         {
-            GetComponent<MouseLook>().enabled = false;
-            Screen.showCursor = true;
+            
             Time.timeScale = 0.0f;
             isPaused = true;
+            
         }
         else if (Input.GetKeyDown("escape") && isPaused)
         {
-            GetComponent<MouseLook>().enabled = true;
-            Screen.showCursor = false;
+
             Time.timeScale = 1.0f;
             isPaused = false;
         }
@@ -31,6 +29,8 @@ public class PauseMenu : MonoBehaviour
 
         if (isPaused)
         {
+            Screen.showCursor = true;
+            GetComponent<MouseLook>().enabled = false;
            
             if (GUI.Button(new Rect (Screen.width/2, 120, 100, 56), "Quit"))
             {
@@ -40,17 +40,21 @@ public class PauseMenu : MonoBehaviour
             {
                 
                // Application.LoadLevel("SomeLevelHere");
-                GetComponent<MouseLook>().enabled = true;
+                
                 Time.timeScale = 1.0f;
                 isPaused = false;
             }
             if (GUI.Button(new Rect (Screen.width/2, 320, 100, 56), "Continue"))
             {
-                GetComponent<MouseLook>().enabled = true;
-                Screen.showCursor = false;
+            
                 Time.timeScale = 1.0f;
                 isPaused = false;
             }
+        }
+        else if (!isPaused)
+        {
+            Screen.showCursor = false;
+            GetComponent<MouseLook>().enabled = true;
         }
 
     }
